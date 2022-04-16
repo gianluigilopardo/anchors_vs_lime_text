@@ -1,2 +1,1 @@
-# interpretability_comparison_text
-Interpretability Comparison for Text Data
+# Interpretability Comparison for Text Data
