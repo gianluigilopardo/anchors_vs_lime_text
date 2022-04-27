@@ -20,9 +20,15 @@ ds = 15  # dot size
 fs = 25  # fontsize
 sns.set(font_scale=2)
 
+# log
+filename = os.path.join(os.path.join(os.getcwd(),'results'), 'logs.log')
+f = open(filename, 'w')
+logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
+logging.info('Comparing Anchors and LIME on text data. \n ')
 
 # DECISION TREES
 res = os.path.join(os.getcwd(), 'results', 'decision_trees')
+logging.info('DECISION TREES \n')
 
 # indicator
 print('Saving indicator...')
@@ -45,13 +51,10 @@ filename = os.path.join(res, 'indicator')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
 plt.clf()
 # log
-filename = os.path.join(res, 'indicator.log')
-with open(filename, 'w'):
-    pass
-logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-logging.info('Comparing Anchors and LIME on text data. \n')
+logging.info('-Model: Indicator')
 for key in info_indicator.keys():
     logging.info(str(key) + ': ' + str(info_indicator[key]))
+f.close()
 
 # dtree
 print('Saving dtree...')
@@ -73,13 +76,10 @@ filename = os.path.join(res, 'dtree')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
 plt.clf()
 # log
-filename = os.path.join(res, 'dtree.log')
-with open(filename, 'w'):
-    pass
-logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-logging.info('Comparing Anchors and LIME on text data. \n')
+logging.info('\n-Model: dtree')
 for key in info_dtree.keys():
     logging.info(str(key) + ': ' + str(info_dtree[key]))
+f.close()
 
 # product_limit
 print('Saving product_limit...')
@@ -103,13 +103,10 @@ filename = os.path.join(res, 'product_limit')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
 plt.clf()
 # log
-filename = os.path.join(res, 'product_limit.log')
-with open(filename, 'w'):
-    pass
-logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-logging.info('Comparing Anchors and LIME on text data. \n')
+logging.info('\n-Model: product_limit')
 for key in info_product_limit.keys():
     logging.info(str(key) + ': ' + str(info_product_limit[key]))
+f.close()
 
 # product_breakpoint
 print('Saving product_breakpoint...')
@@ -133,13 +130,10 @@ filename = os.path.join(res, 'product_breakpoint')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
 plt.clf()
 # log
-filename = os.path.join(res, 'product_breakpoint.log')
-with open(filename, 'w'):
-    pass
-logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-logging.info('Comparing Anchors and LIME on text data. \n')
+logging.info('\n-Model: product_breakpoint')
 for key in info_product_breakpoint.keys():
     logging.info(str(key) + ': ' + str(info_product_breakpoint[key]))
+f.close()
 
 # subsets
 for i in [1, 2, 4, 5]:
@@ -164,22 +158,18 @@ for i in [1, 2, 4, 5]:
     plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
     plt.clf()
     # log
-    filename = os.path.join(res, 'subsets_m' + str(i) + '.log')
-    with open(filename, 'w'):
-        pass
-    logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-    logging.info('Comparing Anchors and LIME on text data. \n')
+    logging.info('\n-Model: subsets')
     for key in info_subsets.keys():
         logging.info(str(key) + ': ' + str(info_subsets[key]))
-
+    f.close()
 
 # LOGISTIC
-res = os.path.join(os.getcwd(), 'results', 'logistic')
+logging.info('LOGISTIC \n')
 
 # sparse
 print('Saving sparse...')
 info_sparse = pickle.load(
-    open(os.path.join('results', 'logistic', str('sparse' + '.p')), 'rb'))
+    open(os.path.join('results', 'logistic', str('sparse.p')), 'rb'))
 # Figure
 fig, axes = plt.subplots(nrows=1, ncols=2, gridspec_kw={'width_ratios': [5, 1]})
 fig.tight_layout()
@@ -197,14 +187,10 @@ filename = os.path.join(res, 'sparse')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
 plt.clf()
 # log
-filename = os.path.join(res, 'sparse.log')
-with open(filename, 'w'):
-    pass
-logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-logging.info('Comparing Anchors and LIME on text data. \n')
+logging.info('\n-Model: sparse')
 for key in info_sparse.keys():
     logging.info(str(key) + ': ' + str(info_sparse[key]))
-
+f.close()
 
 # arbitrary
 print('Saving arbitrary...')
@@ -227,14 +213,10 @@ filename = os.path.join(res, 'arbitrary')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
 plt.clf()
 # log
-filename = os.path.join(res, 'arbitrary.log')
-with open(filename, 'w'):
-    pass
-logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-logging.info('Comparing Anchors and LIME on text data. \n')
+logging.info('\n-Model: arbitrary')
 for key in info_arbitrary.keys():
     logging.info(str(key) + ': ' + str(info_arbitrary[key]))
-
+f.close()
 
 # intercept
 w_1 = 'haircut'
@@ -249,7 +231,7 @@ fig.tight_layout()
 info_intercept['LIME'].Intercept = - info_intercept['LIME'].Intercept
 sns.lineplot(data=info_intercept['LIME'], x='Intercept', y=w_1, label=w_1, linewidth=lw, ci='sd')
 sns.lineplot(data=info_intercept['LIME'], x='Intercept', y=w_2, label=w_2, linewidth=lw, ci='sd')
-plt.legend()
+axes[0].legend()
 axes[0].set_xlabel('- Intercept')
 axes[0].set_ylabel('Occurrences')
 axes[0].set_title('LIME')
@@ -268,7 +250,7 @@ anchors_out[w_2] = a_2
 anchors_out.Intercept = intercept
 sns.lineplot(data=anchors_out, x='Intercept', y=a_1, label=w_1, drawstyle='steps-post', linewidth=lw, marker='o', markersize=ds)
 sns.lineplot(data=anchors_out, x='Intercept', y=a_2, label=w_2, drawstyle='steps-post', linewidth=lw, marker='o', markersize=ds)
-plt.legend()
+axes[1].legend()
 axes[1].set_xlabel('- Intercept')
 axes[1].set_ylabel('Occurrences')
 axes[1].set_title('Anchors')
@@ -276,11 +258,8 @@ filename = os.path.join(res, 'intercept')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
 plt.clf()
 # log
-filename = os.path.join(res, 'intercept.log')
-with open(filename, 'w'):
-    pass
-logging.basicConfig(format='%(message)s', filename=filename, level=logging.INFO)
-logging.info('Comparing Anchors and LIME on text data. \n')
+logging.info('\n-Model: intercept')
 for key in info_intercept.keys():
+    print(str(key) + ': ' + str(info_intercept[key]))
     logging.info(str(key) + ': ' + str(info_intercept[key]))
-
+f.close()
