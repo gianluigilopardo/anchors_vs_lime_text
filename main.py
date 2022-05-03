@@ -11,6 +11,8 @@ import pandas as pd
 
 from matplotlib import pyplot as plt
 import seaborn as sns
+import warnings
+warnings.filterwarnings("ignore")
 
 # specific parameters
 pd.set_option("display.max_rows", None, "display.max_columns", None)
@@ -165,11 +167,12 @@ for i in [1, 2, 4, 5]:
 
 # LOGISTIC
 logging.info('LOGISTIC \n')
+res = os.path.join(os.getcwd(), 'results', 'logistic')
 
 # sparse
 print('Saving sparse...')
 info_sparse = pickle.load(
-    open(os.path.join('results', 'logistic', str('sparse.p')), 'rb'))
+    open(os.path.join(res, str('sparse.p')), 'rb'))
 # Figure
 fig, axes = plt.subplots(nrows=1, ncols=2, gridspec_kw={'width_ratios': [5, 1]})
 fig.tight_layout()
@@ -195,7 +198,7 @@ f.close()
 # arbitrary
 print('Saving arbitrary...')
 info_arbitrary = pickle.load(
-    open(os.path.join('results', 'logistic', str('arbitrary' + '.p')), 'rb'))
+    open(os.path.join(res, str('arbitrary' + '.p')), 'rb'))
 # Figure
 fig, axes = plt.subplots(nrows=1, ncols=2, gridspec_kw={'width_ratios': [5, 1]})
 fig.tight_layout()
@@ -223,7 +226,7 @@ w_1 = 'haircut'
 w_2 = 'daughter'
 print('Saving intercept...')
 info_intercept = pickle.load(
-    open(os.path.join('results', 'logistic', str('intercept' + '.p')), 'rb'))
+    open(os.path.join(res, str('intercept' + '.p')), 'rb'))
 # Figure
 fig, axes = plt.subplots(nrows=1, ncols=2)
 fig.tight_layout()
