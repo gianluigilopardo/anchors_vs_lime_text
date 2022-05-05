@@ -18,7 +18,7 @@ warnings.filterwarnings("ignore")
 pd.set_option("display.max_rows", None, "display.max_columns", None)
 sns.set_theme(style='darkgrid')
 lw = 3  # linewidth
-ds = 15  # dot size
+ds = 3  # dot size
 fs = 25  # fontsize
 sns.set(font_scale=2)
 
@@ -222,47 +222,27 @@ for key in info_arbitrary.keys():
 f.close()
 
 # intercept
-w_1 = 'haircut'
-w_2 = 'daughter'
 print('Saving intercept...')
 info_intercept = pickle.load(
     open(os.path.join(res, str('intercept' + '.p')), 'rb'))
+n_words = 3
+words = list(info_intercept['Coefficients'].keys())[:n_words]
+Anchors = info_intercept['Anchors'][1000:17484]
+a = [[] for i in range(n_words)]
+for i, row in Anchors.iterrows():
+    for j in range(n_words):
+        a[j].append(row.Anchor.count(words[j]))
 # Figure
-fig, axes = plt.subplots(nrows=1, ncols=2)
-fig.tight_layout()
-# LIME
-info_intercept['LIME'].Intercept = - info_intercept['LIME'].Intercept
-sns.lineplot(data=info_intercept['LIME'], x='Intercept', y=w_1, label=w_1, linewidth=lw, ci='sd')
-sns.lineplot(data=info_intercept['LIME'], x='Intercept', y=w_2, label=w_2, linewidth=lw, ci='sd')
-axes[0].legend()
-axes[0].set_xlabel('- Intercept')
-axes[0].set_ylabel('Occurrences')
-axes[0].set_title('LIME')
-# Anchors
-runs, anchors, a_1, a_2, intercept = [], [], [], [], []
-for i, row in info_intercept['Anchors'].iterrows():
-    a_1.append(row.Anchor.count(w_1))
-    a_2.append(row.Anchor.count(w_2))
-    runs.append(row.Run)
-    intercept.append(row.Intercept)
-anchors_out = pd.DataFrame(columns=['Run', 'Intercept', 'Anchor', w_1, w_2])
-anchors_out.Anchor = anchors
-anchors_out.Run = runs
-anchors_out[w_1] = a_1
-anchors_out[w_2] = a_2
-anchors_out.Intercept = intercept
-sns.lineplot(data=anchors_out, x='Intercept', y=a_1, label=w_1, drawstyle='steps-post', linewidth=lw, marker='o', markersize=ds)
-sns.lineplot(data=anchors_out, x='Intercept', y=a_2, label=w_2, drawstyle='steps-post', linewidth=lw, marker='o', markersize=ds)
-axes[1].legend()
-axes[1].set_xlabel('- Intercept')
-axes[1].set_ylabel('Occurrences')
-axes[1].set_title('Anchors')
+plt.tight_layout()
+for j in range(n_words):
+    sns.lineplot(data=Anchors, x='Shift', y=a[j], label=words[j], drawstyle='steps-post', linewidth=lw, marker='o',
+                 markersize=ds)
+plt.xlabel('Shift')
+plt.ylabel('Occurrences')
 filename = os.path.join(res, 'intercept')
 plt.savefig(fname=str(filename + '.pdf'), bbox_inches='tight', pad_inches=0)
-plt.clf()
 # log
 logging.info('\n-Model: intercept')
 for key in info_intercept.keys():
-    print(str(key) + ': ' + str(info_intercept[key]))
-    logging.info(str(key) + ': ' + str(info_intercept[key]))
-f.close()
+    logging.info(str(key) + ': ' + str(info_intercept[key]) + '\n')
+
