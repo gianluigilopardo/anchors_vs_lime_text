@@ -1,6 +1,7 @@
 import numpy as np
 
 from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
 
 
 # mapper needed for lime
@@ -32,16 +33,36 @@ def unique(list1):
 
 
 # count multiplicities
-def count_multiplicities(data, doc, words=None):
-    if not words:
-        words = doc.split()
-    else:
-        words = [item for sublist in words for item in sublist]
-    m = {}
-    counter = CountVectorizer()
-    counter.fit_transform(data)
-    D = counter.vocabulary_
-    counter.transform([doc])
-    tf = counter.transform([doc]).toarray().flatten()
-    m = {w: tf[D[w]] for w in words}
-    return m
+# def count_multiplicities(data, doc, words=None):
+# if not words:
+#     words = doc.split()
+# else:
+#     words = [item for sublist in words for item in sublist]
+# m = {}
+# counter = CountVectorizer()
+# counter.fit_transform(data)
+# D = counter.vocabulary_
+# counter.transform([doc])
+# tf = counter.transform([doc]).toarray().flatten()
+# m = {w: tf[D[w]] for w in words}
+def count_multiplicities(doc):
+    counter = {}
+    words = doc.split()
+    for word in words:
+        if word not in counter:
+            counter[word] = 0
+        counter[word] += 1
+    return dict(sorted(counter.items(), key=lambda item: item[1], reverse=True))
+
+
+def coefficients(vectorizer, model, doc, n=20):
+    dic = vectorizer.get_feature_names()
+    p = vectorizer.build_preprocessor()
+    p_doc = p(doc)
+    t = vectorizer.build_tokenizer()
+    words = t(p_doc)
+    coefs = {}
+    for word in words:
+        coefs[word] = model.coef_[0, dic.index(word)]
+    return dict(sorted(coefs.items(), key=lambda item: item[1], reverse=True))
+
