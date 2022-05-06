@@ -41,7 +41,6 @@ df, X, y = data.df, data.X, data.y
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
-
 # CountVectorizer transformation
 vectorizer = CountVectorizer()
 train_vectors = vectorizer.fit_transform(X_train)
@@ -60,7 +59,6 @@ print(accuracy_score(y_test, y_pred))
 
 doc = df.text[13]
 print(doc)
-print(c.predict([doc]))
 print(c.predict_proba([doc]))
 
 N_runs = 100
